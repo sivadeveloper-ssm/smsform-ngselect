@@ -85,7 +85,6 @@ public singleDropdownSettings;
   public areas: any = [];
   public governingBodies: any =[];
   public citations: any = [];
-  public fileTypes: any = [];
   public industries: any = [];
   public topics: any = [];
   public products: any = [];
@@ -136,27 +135,25 @@ public singleDropdownSettings;
 
     this.api.getData().subscribe(results => {
       // set the results of all the fields from forkjoin api call
-     
+      
       this.authors = results[0];
       this.languages = results[1];
       this.areas = results[2];
       this.governingBodies = results[3];
       this.citations = results[4];
-      this.fileTypes = results[5];
-      this.industries = results[6];
-      this.topics = results[7];
-      this.products = results[8];
-      this.sysnonyms = results[9];
-      this.templateTypes = results[10];
-      this.types = results[11];
-      this.contentTypes = results[12];
-      this.geographies = results[13];
+      this.industries = results[5];
+      this.topics = results[6];
+      this.products = results[7];
+      this.sysnonyms = results[8];
+      this.templateTypes = results[9];
+      this.types = results[10];
+      this.contentTypes = results[11];
+      this.geographies = results[12];
        
       this.isDataLoaded = true;
        this.loading = false;
 
     
-
      
 
       //call to set the selected value based on xmetal app values

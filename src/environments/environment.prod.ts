@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  baseUrl : ''
+  baseUrl : 'http://wafstcapp05:7080/smswebservice/api/'
  
 };

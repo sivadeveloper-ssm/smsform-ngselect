@@ -103,13 +103,13 @@
             [multiple]="true"
             [virtualScroll] = "true"
             placeholder = "Select Citations"
-            bindLabel="cfrId"
+            bindLabel="title"
             bindValue="id"
             [selectableGroup]="true"
             [closeOnSelect]="false"
             [(ngModel)]="citation" (clear)="setXmetalAndCitationRelatedFields()" (add)="onAddCitations($event)" (remove)="onRemoveCitations($event.value)">
             <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.cfrId}}
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.title}}
             </ng-template>
           </ng-select> 
       </div>
