@@ -3,6 +3,8 @@ import { DataService } from './services/dataservice';
 import { ArrayClass } from './Class/ArrayClass';
 import * as moment from 'moment';
 
+import * as AppConstant from './Constants/const';
+
 declare var ActiveXObject: (type: string) => void;
 
 @Component({
@@ -18,6 +20,7 @@ export class AppComponent {
   private authorDefaultId = 2;
   private languageDefaultId = 1;
   private geographyDefaultId = 1;
+  private isCheckListType = false;
   
   public promoted;
   public mandatory;
@@ -33,6 +36,7 @@ export class AppComponent {
   public industry = [];
   public topic = [];
   public governingBody = [];
+  public correctResponse = [];
   public purgeDate;
   public effectiveDate;
 
@@ -50,6 +54,7 @@ export class AppComponent {
   public xmetalGeography;
   public xmetalMandatory;
   public xmetalPromoted;
+  public xmetalCorrectResponses;
 
   
 
@@ -75,6 +80,7 @@ public singleDropdownSettings;
     public attrProduct;
     public attrPurgedate;
     public attrTemplatetype;
+    public attrCorrectResponses;
 
     //wait till all the data loaded from web service
     public isDataLoaded = false;
@@ -93,6 +99,8 @@ public singleDropdownSettings;
   public types: any = [];
   public contentTypes: any = [];
   public geographies: any = [];
+  public correctResponses : any = [];
+  public availableCorrectResponses : any = [];
 
  constructor(private api: DataService,
              private arrayClass : ArrayClass){}
@@ -104,6 +112,7 @@ public singleDropdownSettings;
     
    this.loading = true;
    this.connectToXmetal();
+   alert(this.attrCorrectResponses);
    this.getResults();
    this.setHiddenValues();  
  }
@@ -111,24 +120,34 @@ public singleDropdownSettings;
 
  //Connect to XMETAL APP and read all the Metadata tag attribute values.
  connectToXmetal() {
-  var xmlApp = new ActiveXObject("XMetaL.Application");
- this.attrAuthor = xmlApp.Selection.ContainerNode.getAttribute("authoredby");
- this.attrLanguage = xmlApp.Selection.ContainerNode.getAttribute("language");
- this.attrArea = xmlApp.Selection.ContainerNode.getAttribute("area");
- this.attrTopics = xmlApp.Selection.ContainerNode.getAttribute("topic");
- this.attrCitations = xmlApp.Selection.ContainerNode.getAttribute("citations");
- this.attrType = xmlApp.Selection.ContainerNode.getAttribute("type");
- this.attrContentType = xmlApp.Selection.ContainerNode.getAttribute("contenttype");
- this.attrEffectivedate = xmlApp.Selection.ContainerNode.getAttribute("effectivedate");
- this.attrGeography = xmlApp.Selection.ContainerNode.getAttribute("geography");
- this.attrGoverningbody = xmlApp.Selection.ContainerNode.getAttribute("governingbody");
- this.attrIndustries = xmlApp.Selection.ContainerNode.getAttribute("industries");
- this.attrMandatory = xmlApp.Selection.ContainerNode.getAttribute("mandatory");
- this.attrPromoted = xmlApp.Selection.ContainerNode.getAttribute("promoted");
- this.attrProduct = xmlApp.Selection.ContainerNode.getAttribute("product");
- this.attrPurgedate = xmlApp.Selection.ContainerNode.getAttribute("purgedate");
- this.attrTemplatetype = xmlApp.Selection.ContainerNode.getAttribute("templatetype");
- }
+  var xmlApp = new ActiveXObject(AppConstant.constfields.XMETAL_APPLICATION);
+ this.attrAuthor = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.AUTHOREDBY);
+ this.attrLanguage = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.LANGUAGE);
+ this.attrArea = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.AREA);
+ this.attrTopics = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.TOPIC);
+ this.attrCitations = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.CITATIONS);
+ this.attrType = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.TYPE);
+ this.attrContentType = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.CONTENTTYPE);
+ this.attrEffectivedate = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.EFFECTIVEDATE);
+ this.attrGeography = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.GEOGRAPHY);
+ this.attrGoverningbody = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.GOVERNINGBODY);
+ this.attrIndustries = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.INDUSTRIES);
+ this.attrMandatory = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.MANDATORY);
+ this.attrPromoted = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.PROMOTED);
+ this.attrProduct = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.PRODUCT);
+ this.attrPurgedate = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.PURGEDATE);
+ this.attrTemplatetype = xmlApp.Selection.ContainerNode.getAttribute(AppConstant.constfields.TEMPLATETYPE);
+ var rng = xmlApp.ActiveDocument.Range;
+ this.isCheckListType = rng.IsParentElement(AppConstant.constfields.CHECKLISTQUESTION);
+    if(this.isCheckListType)
+    {
+        var selectNode = rng.ContainerNode;
+        var count = 0;
+        while(selectNode.nodeName != AppConstant.constfields.CHECKLISTQUESTION)
+          selectNode = selectNode.parentNode;
+        this.attrCorrectResponses = selectNode.getAttribute(AppConstant.constfields.CORRECTRESPONSES);
+    }
+ } 
 
   // Get data from the rest API
   getResults() {
@@ -149,7 +168,7 @@ public singleDropdownSettings;
       this.types = results[10];
       this.contentTypes = results[11];
       this.geographies = results[12];
-       
+      this.correctResponses = results[13];
       this.isDataLoaded = true;
        this.loading = false;
 
@@ -232,7 +251,21 @@ public setMultipleSelectedValues(){
      });
      this.industry =  arrObject.map(o => o.id);
    }
+
+     // Available response will be only available for check list document type and it will 
+    // based on the types
+    if(this.attrCorrectResponses){
+      this.availableCorrectResponses = this.correctResponses.filter( c => c.typeid == this.attrType);
+      console.log(this.availableCorrectResponses);
+      let arrString = this.attrCorrectResponses.split(" ");
+      let arrObject = arrString.map(res => {
+        return this.availableCorrectResponses.find( o => o.id == res);
+      });
+      this.correctResponse = arrObject.map(o => o.id);
+    }
+
   }
+
  //set selected value on the web App with values from xmetal app
  public setSingleSeletedValue()
  {
@@ -250,18 +283,20 @@ public setMultipleSelectedValues(){
     }
     if(this.attrContentType)
     this.contentTypeModel = this.contentTypes.find( o => o.id == this.attrContentType);
+
     if(this.attrType)
     this.typeModel=  this.types.find( o => o.id == this.attrType);
+  
+
     if(this.attrGeography)
     this.geographyModel = this.geographies.find( o => o.id == this.attrGeography);
     else{
       this.geographyModel = this.geographies.find( o => o.id == this.geographyDefaultId);
       this.xmetalGeography = this.geographyDefaultId;
     }
+
     if(this.attrTemplatetype)
     this.templateTypeModel = this.templateTypes.find( o => o.id == this.attrTemplatetype);
-
-
  }
 
    // Set boolean field values from XMETAL APP.
@@ -275,20 +310,30 @@ public setBooleanFieldValue() {
 
 
 
-  setContentAndTemplateType(){
+  setRelatedFieldTypeValues(){
     
     if(this.typeModel){
             this.xmetalType = this.typeModel.id;
             let contentTypeObj = this.contentTypes.find( o => o.id == this.typeModel.contentId);
             let templateTypeObj = this.templateTypes.find( o => o.id == this.typeModel.templateId );
+            //Set Content Type based on Type
             this.contentTypeModel = contentTypeObj;
             this.xmetalContentType = this.contentTypeModel.id;
+            // Set Template Type based on Type
             this.templateTypeModel = templateTypeObj;
             this.xmetalTemplatetype = this.templateTypeModel.id;
+            this.availableCorrectResponses = this.correctResponses.filter( c => c.typeid == this.xmetalType);
+            // Set CorrectResponses , if the selected type is of check list type.
+            if(this.availableCorrectResponses && this.isCheckListType) {
+              this.xmetalCorrectResponses = '';
+              this.correctResponse = [];
+            }
     }
     else{
        this.contentTypeModel = '';
        this.templateTypeModel = '';
+       this.availableCorrectResponses = [];
+       this.xmetalCorrectResponses = '';
     }
   }
 
@@ -334,6 +379,11 @@ public setBooleanFieldValue() {
   this.area = [];
   this.xmetalArea = this.area;
  }
+
+ onclearCorrectResponses() {
+   this.correctResponse = [];
+ }
+
  onclearProducts(){
   this.product = [];
   this.xmetalProduct = this.product;
@@ -359,6 +409,10 @@ onclearGoverningBodies(){
     this.xmetalArea = this.arrayClass.setMultivalues(this.area);
  }
 
+ onAddCorrectResponses(data){
+   this.correctResponse.push(data.id);
+ }
+
  onAddProducts(data){
    this.product.push(data.id);
    this.xmetalProduct = this.arrayClass.setMultivalues(this.product);
@@ -381,6 +435,10 @@ onAddIndustries(data){
 
  onRemoveAreas(value){
    this.xmetalArea = this.arrayClass.removeArrayValue(this.area,value.id);
+ }
+
+ onRemoveCorrectResponses(value){
+
  }
 
  onRemoveProducts(value){

@@ -68,7 +68,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label for="type">Type</label>
-                <select class="form-control" id="type" name="type" [(ngModel)]="typeModel" (change)="setContentAndTemplateType()">
+                <select class="form-control" id="type" name="type" [(ngModel)]="typeModel" (change)="setRelatedFieldTypeValues()">
                     <option value="" selected disabled>Select Type</option>
                   <option *ngFor="let type of types" [ngValue]="type" >{{type.description}}</option>
                 </select>
@@ -95,28 +95,50 @@
               </select>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="citations">Select Citations</label>
-        <ng-select
-            [items]="citations"
-            [multiple]="true"
-            [virtualScroll] = "true"
-            placeholder = "Select Citations"
-            bindLabel="title"
-            bindValue="id"
-            [selectableGroup]="true"
-            [closeOnSelect]="false"
-            [(ngModel)]="citation" (clear)="setXmetalAndCitationRelatedFields()" (add)="onAddCitations($event)" (remove)="onRemoveCitations($event.value)">
-            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.title}}
-            </ng-template>
-          </ng-select> 
-      </div>
-        </div>
+        <div class="col-md-3" *ngIf="isCheckListType">
+            <div class="form-group" >
+                <label for="correctResponses">Correct Responses</label>
+                <ng-select  
+                [items]="availableCorrectResponses"
+                [multiple]="true"
+                [virtualScroll] = "true"
+                placeholder = "Select Correct Responses"
+                bindLabel="description"
+                [selectableGroup]="true"
+                [closeOnSelect]="false"
+                bindValue="id"
+                [(ngModel)]="correctResponse"  (clear)="onclearCorrectResponses()" (add)="onAddCorrectResponses($event)"
+                 (remove)="onRemoveCorrectResponses($event.value)"  >
+                <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+                </ng-template>
+                  </ng-select>
+            </div>
+          </div>
+  
+
 </div>
 
 <div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+          <label for="citations">Select Citations</label>
+      <ng-select
+          [items]="citations"
+          [multiple]="true"
+          [virtualScroll] = "true"
+          placeholder = "Select Citations"
+          bindLabel="title"
+          bindValue="id"
+          [selectableGroup]="true"
+          [closeOnSelect]="false"
+          [(ngModel)]="citation" (clear)="setXmetalAndCitationRelatedFields()" (add)="onAddCitations($event)" (remove)="onRemoveCitations($event.value)">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.title}}
+          </ng-template>
+        </ng-select> 
+    </div>
+      </div>
   <div class="col-md-6">
     <div class="form-group">
      <label for="area">Select Areas</label>
@@ -136,28 +158,29 @@
       </ng-select>
     </div>
   </div>
-  <div class="col-md-6">
-      <div class="form-group">
-    
-        <label for="product">Select Products</label>
-       <ng-select
-          [items]="products"
-          [multiple]="true"
-          [virtualScroll] = "true"
-          placeholder = "Select Products"
-          bindLabel="description"
-          [selectableGroup]="true"
-          [closeOnSelect]="false"
-          bindValue="id"
-          [(ngModel)]="product" (clear)="onclearProducts()" (add)="onAddProducts($event)" (remove)="onRemoveProducts($event.value)">
-          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-              <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
-          </ng-template>
-        </ng-select> 
-      </div>
-    </div>
+
 </div>
 <div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+      
+          <label for="product">Select Products</label>
+         <ng-select
+            [items]="products"
+            [multiple]="true"
+            [virtualScroll] = "true"
+            placeholder = "Select Products"
+            bindLabel="description"
+            [selectableGroup]="true"
+            [closeOnSelect]="false"
+            bindValue="id"
+            [(ngModel)]="product" (clear)="onclearProducts()" (add)="onAddProducts($event)" (remove)="onRemoveProducts($event.value)">
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+            </ng-template>
+          </ng-select> 
+        </div>
+      </div>
     <div class="col-md-6">
         <div class="form-group">
         <label for="topic">Select Topics</label>
@@ -177,30 +200,31 @@
           </ng-select>  
         </div>
       </div>
-      <div class="col-md-6">
-          <div class="form-group">
-        <label for="industry">Select Industry</label>
-            <ng-select
-              [items]="industries"
-              [multiple]="true"
-              [virtualScroll] = "true"
-              placeholder = "Select Industry"
-              bindLabel="description"
-              [selectableGroup]="true"
-              [closeOnSelect]="false"
-              bindValue="id"
-              [(ngModel)]="industry" (clear)="onclearIndustries()" (add)="onAddIndustries($event)" (remove)="onRemoveIndustries($event.value)">
-              <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
-                  <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
-              </ng-template>
-            </ng-select>  
-          </div>
-        </div>
+
 
 </div>
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-6">
+        <div class="form-group">
+      <label for="industry">Select Industry</label>
+          <ng-select
+            [items]="industries"
+            [multiple]="true"
+            [virtualScroll] = "true"
+            placeholder = "Select Industry"
+            bindLabel="description"
+            [selectableGroup]="true"
+            [closeOnSelect]="false"
+            bindValue="id"
+            [(ngModel)]="industry" (clear)="onclearIndustries()" (add)="onAddIndustries($event)" (remove)="onRemoveIndustries($event.value)">
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+            </ng-template>
+          </ng-select>  
+        </div>
+      </div>
+    <div class="col-md-6">
         <div class="form-group">
      <label for="governingBody">Select Governing Bodies</label>
         <ng-select
@@ -236,6 +260,7 @@
     <input type="hidden" id="xmetalTemplatetype" [value]="xmetalTemplatetype" />
     <input type="hidden" id="xmetalMandatory" [value]="xmetalMandatory" />
     <input type="hidden" id="xmetalPromoted" [value]="xmetalPromoted" />
+    <input type="hidden" id="xmetalCorrectResponses" [value]="xmetalCorrectResponses"  />
 </div>
 </div>
 </div>
