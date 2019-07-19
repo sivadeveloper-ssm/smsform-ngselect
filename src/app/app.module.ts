@@ -17,10 +17,14 @@ import {NgxLoadingModule} from 'ngx-loading';
 import {AppBootstrapModule} from './Shared/app-bootstrap.module';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
 import {NgSelectModule} from '@ng-select/ng-select';
+import { FrequencyComponent } from './component/frequency/frequency.component';
+import { MetadataformComponent } from './component/metadataform/metadataform.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    FrequencyComponent,
+    MetadataformComponent
   ],
   imports: [
     BrowserModule,

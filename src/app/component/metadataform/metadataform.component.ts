@@ -1,18 +1,19 @@
 import { Component } from '@angular/core';
-import { DataService } from './services/dataservice';
-import { ArrayClass } from './Class/ArrayClass';
+import { DataService } from '../../services/dataservice';
+import { ArrayClass } from '../../Class/ArrayClass';
 import * as moment from 'moment';
 
-import * as AppConstant from './Constants/const';
+import * as AppConstant from '../../Constants/const';
 
 declare var ActiveXObject: (type: string) => void;
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: 'app-metadataform',
+  templateUrl: './metadataform.component.html',
+  styleUrls: ['./metadataform.component.css']
 })
-export class AppComponent {
+export class MetadataformComponent  {
+
   title = 'smsform';
 
   public loading = false;

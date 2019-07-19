@@ -1,0 +1,268 @@
+<nav class="navbar navbar-default">
+  <div class="navbar-header">
+       <span class="navbar-brand">SMS MetaData Form</span>
+  </div>
+
+</nav>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }" ></ngx-loading>
+<div *ngIf="isDataLoaded">
+<div class="container">
+<div class="row">
+<div class="col-md-3">
+<div class="form-group">
+<label for="purgeDate">Purge Date</label>
+<input type="text" placeholder="Select Purge Date" id="purgeDate" class="form-control" [(ngModel)]="purgeDate" bsDatepicker>
+</div>
+</div>
+<div class="col-md-3">
+  <div class="form-group">
+<label for="effectiveDate">Effective Date</label>
+<input type="text" placeholder="Select Effective Date" class="form-control" id="effectiveDate" [(ngModel)]="effectiveDate" bsDatepicker>
+</div>
+</div>
+<div class="col-md-3">
+ <label for="mandatory">Mandatory </label> 
+ <div class="form-group">
+<input type="radio"  value="1" [(ngModel)]="mandatory" (change)="setMadatoryRadioButton()" > Yes  
+<input type="radio"  value="0" [(ngModel)]="mandatory" (change)="setMadatoryRadioButton()" > No
+</div>
+</div>
+<div class="col-md-3">
+  <label for="promoted">Promoted </label> 
+  <div class="form-group">
+   <input type="radio" name="promoted" id="promoted" value="1"  [(ngModel)]="promoted" (change)="setPromotedRadioButton()"> Yes
+   <input type="radio" name="promoted" id="promoted" value="0" [(ngModel)]="promoted" (change)="setPromotedRadioButton()" > No
+   </div>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-md-3">
+  <div class="form-group">
+      <label for="author">Select Author</label>
+  <select class="form-control" id="author" name="author" [(ngModel)]="authorModel" (change)="onAuthorSelect()">
+      <option value="" selected disabled>Select Author</option>
+    <option *ngFor="let author of authors" [ngValue]="author">{{author.description}}</option>
+  </select>
+  </div>
+</div>
+<div class="col-md-3">
+    <div class="form-group">
+        <label for="language">Language</label>
+        <select class="form-control" id="language" name="language" [(ngModel)]="languageModel" (change)="onLanguageSelect()">
+            <option value="" selected disabled>Select Language</option>
+          <option *ngFor="let language of languages" [ngValue]="language">{{language.description}}</option>
+        </select>
+    </div>
+  </div>
+  <div class="col-md-3">
+      <div class="form-group">
+          <label for="geography">Geography</label>
+          <select class="form-control" id="geography" name="geography" [(ngModel)]="geographyModel" (change)="onGeographySelect()">
+              <option value="" selected disabled>Select Geography</option>
+            <option *ngFor="let geography of geographies" [ngValue]="geography">{{geography.description}}</option>
+          </select>
+      </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select class="form-control" id="type" name="type" [(ngModel)]="typeModel" (change)="setRelatedFieldTypeValues()">
+                <option value="" selected disabled>Select Type</option>
+              <option *ngFor="let type of types" [ngValue]="type" >{{type.description}}</option>
+            </select>
+        </div>
+      </div>
+</div>  
+
+<div class="row">
+<div class="col-md-3">
+    <div class="form-group">
+        <label for="contentType">Content Type</label>
+        <select class="form-control" id="contentType" name="contentType" [(ngModel)]="contentTypeModel" disabled>
+            <option value="" selected disabled>Select Content Type</option>
+          <option *ngFor="let contentType of contentTypes" [ngValue]="contentType">{{contentType.description}}</option>
+        </select>
+    </div>
+  </div>
+  <div class="col-md-3">
+      <div class="form-group">
+          <label for="templateType">Template Type</label>
+          <select class="form-control" id="templateType" name="templateType" [(ngModel)]="templateTypeModel" disabled>
+              <option value="" selected disabled>Select Template Type</option>
+            <option *ngFor="let templateType of templateTypes" [ngValue]="templateType">{{templateType.description}}</option>
+          </select>
+      </div>
+    </div>
+    <div class="col-md-3" *ngIf="isCheckListType">
+        <div class="form-group" >
+            <label for="correctResponses">Correct Responses</label>
+            <ng-select  
+            [items]="availableCorrectResponses"
+            [multiple]="true"
+            [virtualScroll] = "true"
+            placeholder = "Select Correct Responses"
+            bindLabel="description"
+            [selectableGroup]="true"
+            [closeOnSelect]="false"
+            bindValue="id"
+            [(ngModel)]="correctResponse"  (clear)="onclearCorrectResponses()" (add)="onAddCorrectResponses($event)"
+             (remove)="onRemoveCorrectResponses($event.value)"  >
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+            </ng-template>
+              </ng-select>
+        </div>
+      </div>
+
+
+</div>
+
+<div class="row">
+<div class="col-md-6">
+    <div class="form-group">
+      <label for="citations">Select Citations</label>
+  <ng-select
+      [items]="citations"
+      [multiple]="true"
+      [virtualScroll] = "true"
+      placeholder = "Select Citations"
+      bindLabel="title"
+      bindValue="id"
+      [selectableGroup]="true"
+      [closeOnSelect]="false"
+      [(ngModel)]="citation" (clear)="setXmetalAndCitationRelatedFields()" (add)="onAddCitations($event)" (remove)="onRemoveCitations($event.value)">
+      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+          <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.title}}
+      </ng-template>
+    </ng-select> 
+</div>
+  </div>
+<div class="col-md-6">
+<div class="form-group">
+ <label for="area">Select Areas</label>
+  <ng-select
+    [items]="areas"
+    [multiple]="true"
+    [virtualScroll] = "true"
+    placeholder = "Select Areas"
+    bindLabel="description"
+    [selectableGroup]="true"
+    [closeOnSelect]="false"
+    bindValue="id"
+    [(ngModel)]="area"  (clear)="onclearAreas()" (add)="onAddAreas($event)" (remove)="onRemoveAreas($event.value)">
+    <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+        <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+    </ng-template>
+  </ng-select>
+</div>
+</div>
+
+</div>
+<div class="row">
+<div class="col-md-6">
+    <div class="form-group">
+  
+      <label for="product">Select Products</label>
+     <ng-select
+        [items]="products"
+        [multiple]="true"
+        [virtualScroll] = "true"
+        placeholder = "Select Products"
+        bindLabel="description"
+        [selectableGroup]="true"
+        [closeOnSelect]="false"
+        bindValue="id"
+        [(ngModel)]="product" (clear)="onclearProducts()" (add)="onAddProducts($event)" (remove)="onRemoveProducts($event.value)">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+        </ng-template>
+      </ng-select> 
+    </div>
+  </div>
+<div class="col-md-6">
+    <div class="form-group">
+    <label for="topic">Select Topics</label>
+       <ng-select
+        [items]="topics"
+        [multiple]="true"
+        [virtualScroll] = "true"
+        placeholder = "Select Topics"
+        bindLabel="description"
+        [selectableGroup]="true"
+        [closeOnSelect]="false"
+        bindValue="id"
+        [(ngModel)]="topic" (clear)="onclearTopics()" (add)="onAddTopics($event)" (remove)="onRemoveTopics($event.value)">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+        </ng-template>
+      </ng-select>  
+    </div>
+  </div>
+
+
+</div>
+
+<div class="row">
+<div class="col-md-6">
+    <div class="form-group">
+  <label for="industry">Select Industry</label>
+      <ng-select
+        [items]="industries"
+        [multiple]="true"
+        [virtualScroll] = "true"
+        placeholder = "Select Industry"
+        bindLabel="description"
+        [selectableGroup]="true"
+        [closeOnSelect]="false"
+        bindValue="id"
+        [(ngModel)]="industry" (clear)="onclearIndustries()" (add)="onAddIndustries($event)" (remove)="onRemoveIndustries($event.value)">
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+        </ng-template>
+      </ng-select>  
+    </div>
+  </div>
+<div class="col-md-6">
+    <div class="form-group">
+ <label for="governingBody">Select Governing Bodies</label>
+    <ng-select
+        [items]="governingBodies"
+        [multiple]="true"
+        [virtualScroll] = "true"
+        placeholder = "Select GoverningBodies"
+        bindLabel="description"
+        [selectableGroup]="true"
+        [closeOnSelect]="false"
+        bindValue="id"
+        [(ngModel)]="governingBody" (clear)="onclearGoverningBodies()" (add)="onAddGoverningBodies($event)" (remove)="onRemoveGoverningBodies($event.value)" >
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected"/> {{item.description}}
+        </ng-template>
+      </ng-select>    
+    </div>
+  </div>
+
+</div>
+<div>
+<input type="hidden" id="xmetalCitation" [value]="xmetalCitation" />
+<input type="hidden" id="xmetalArea" [value]="xmetalArea" />
+<input type="hidden" id="xmetalTopic" [value]="xmetalTopic" />
+<input type="hidden" id="xmetalGoverningbody" [value]="xmetalGoverningbody" />
+<input type="hidden" id="xmetalIndustries" [value]="xmetalIndustries" />
+<input type="hidden" id="xmetalProduct" [value]="xmetalProduct" />
+<input type="hidden" id="xmetalAuthor" [value]="xmetalAuthor" />
+<input type="hidden" id="xmetalLanguage" [value]="xmetalLanguage" />
+<input type="hidden" id="xmetalType" [value]="xmetalType" />
+<input type="hidden" id="xmetalContentType" [value]="xmetalContentType" />
+<input type="hidden" id="xmetalGeography" [value]="xmetalGeography" />
+<input type="hidden" id="xmetalTemplatetype" [value]="xmetalTemplatetype" />
+<input type="hidden" id="xmetalMandatory" [value]="xmetalMandatory" />
+<input type="hidden" id="xmetalPromoted" [value]="xmetalPromoted" />
+<input type="hidden" id="xmetalCorrectResponses" [value]="xmetalCorrectResponses"  />
+</div>
+</div>
+</div>
+
+
