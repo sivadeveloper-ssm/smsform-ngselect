@@ -172,7 +172,11 @@ public singleDropdownSettings;
       this.isDataLoaded = true;
        this.loading = false;
 
-    
+      this.types.sort(function(a,b){
+         var typeA = a.description.toUpperCase();
+         var typeB = b.description.toUpperCase();
+         return (typeA < typeB) ? -1 : (typeA > typeB) ? 1 : 0;
+      })
      
 
       //call to set the selected value based on xmetal app values

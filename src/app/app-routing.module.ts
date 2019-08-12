@@ -5,7 +5,8 @@ import { MetadataformComponent } from './component/metadataform/metadataform.com
 
 const routes : Routes = [
   {path : '' , 'component' : MetadataformComponent },
-  { path : 'checklist' , 'component' : FrequencyComponent}
+  { path : 'checklist' , 'component' : FrequencyComponent},
+  {path : '**', 'component' : MetadataformComponent}
 ]
 
 @NgModule({
