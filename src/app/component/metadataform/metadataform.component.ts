@@ -4,6 +4,7 @@ import { ArrayClass } from '../../Class/ArrayClass';
 import * as moment from 'moment';
 
 import * as AppConstant from '../../Constants/const';
+import { type } from 'src/app/Constants/type';
 
 declare var ActiveXObject: (type: string) => void;
 
@@ -172,11 +173,13 @@ public singleDropdownSettings;
       this.isDataLoaded = true;
        this.loading = false;
 
-      this.types.sort(function(a,b){
+     
+      this.types.sort((a,b) => {
          var typeA = a.description.toUpperCase();
          var typeB = b.description.toUpperCase();
          return (typeA < typeB) ? -1 : (typeA > typeB) ? 1 : 0;
-      })
+      
+      });
      
 
       //call to set the selected value based on xmetal app values
@@ -260,7 +263,6 @@ public setMultipleSelectedValues(){
     // based on the types
     if(this.attrCorrectResponses){
       this.availableCorrectResponses = this.correctResponses.filter( c => c.typeid == this.attrType);
-      console.log(this.availableCorrectResponses);
       let arrString = this.attrCorrectResponses.split(" ");
       let arrObject = arrString.map(res => {
         return this.availableCorrectResponses.find( o => o.id == res);
@@ -273,6 +275,8 @@ public setMultipleSelectedValues(){
  //set selected value on the web App with values from xmetal app
  public setSingleSeletedValue()
  {
+
+  
     if(this.attrAuthor)
     this.authorModel = this.authors.find( o => o.id == this.attrAuthor);
     else{
@@ -289,7 +293,7 @@ public setMultipleSelectedValues(){
     this.contentTypeModel = this.contentTypes.find( o => o.id == this.attrContentType);
 
     if(this.attrType)
-    this.typeModel=  this.types.find( o => o.id == this.attrType);
+    this.typeModel =  this.types.find( o => o.id == this.attrType);
   
 
     if(this.attrGeography)
@@ -315,6 +319,7 @@ public setBooleanFieldValue() {
 
 
   setRelatedFieldTypeValues(){
+
     
     if(this.typeModel){
             this.xmetalType = this.typeModel.id;
@@ -333,12 +338,19 @@ public setBooleanFieldValue() {
               this.correctResponse = [];
             }
     }
-    else{
-       this.contentTypeModel = '';
-       this.templateTypeModel = '';
-       this.availableCorrectResponses = [];
-       this.xmetalCorrectResponses = '';
-    }
+    else
+        this.onClearType();
+  }
+
+  onClearType(){
+    this.typeModel = '';
+    this.xmetalType = this.typeModel;
+    this.contentTypeModel = '';
+    this.xmetalContentType = this.contentTypeModel;
+    this.templateTypeModel = '';
+    this.xmetalTemplatetype = this.templateTypeModel;
+    this.availableCorrectResponses = [];
+    this.xmetalCorrectResponses = this.availableCorrectResponses;
   }
 
   onAreaSelect(){

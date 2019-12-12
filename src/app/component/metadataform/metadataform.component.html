@@ -68,10 +68,16 @@
     <div class="col-md-3">
         <div class="form-group">
             <label for="type">Type</label>
-            <select class="form-control" id="type" name="type" [(ngModel)]="typeModel" (change)="setRelatedFieldTypeValues()">
+    <!--       <select class="form-control" id="type" name="type" [(ngModel)]="typeModel" (change)="setRelatedFieldTypeValues()">
                 <option value="" selected disabled>Select Type</option>
               <option *ngFor="let type of types" [ngValue]="type" >{{type.description}}</option>
-            </select>
+            </select> --> 
+            <ng-select
+            [items]="types"
+            [virtualScroll] = "true"
+            bindLabel="description"
+            [(ngModel)]="typeModel" (change)="setRelatedFieldTypeValues()" (clear)="onClearType()">
+          </ng-select> 
         </div>
       </div>
 </div>  
