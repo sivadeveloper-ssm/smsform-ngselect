@@ -76,7 +76,13 @@
             [items]="types"
             [virtualScroll] = "true"
             bindLabel="description"
+            groupBy = "contenttype"
             [(ngModel)]="typeModel" (change)="setRelatedFieldTypeValues()" (clear)="onClearType()">
+       
+          <ng-template ng-optgroup-tmp let-item="item">
+        <!-- <div title="{{item.description}}">{{item.description}}</div> -->
+         {{ item.contenttype || 'Unnamed group'}} 
+            </ng-template>
           </ng-select> 
         </div>
       </div>

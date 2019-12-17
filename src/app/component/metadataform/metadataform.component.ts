@@ -323,8 +323,8 @@ public setBooleanFieldValue() {
     
     if(this.typeModel){
             this.xmetalType = this.typeModel.id;
-            let contentTypeObj = this.contentTypes.find( o => o.id == this.typeModel.contentId);
-            let templateTypeObj = this.templateTypes.find( o => o.id == this.typeModel.templateId );
+            let contentTypeObj = this.contentTypes.find( o => o.id == this.typeModel.contentid);
+            let templateTypeObj = this.templateTypes.find( o => o.id == this.typeModel.templateid );
             //Set Content Type based on Type
             this.contentTypeModel = contentTypeObj;
             this.xmetalContentType = this.contentTypeModel.id;
