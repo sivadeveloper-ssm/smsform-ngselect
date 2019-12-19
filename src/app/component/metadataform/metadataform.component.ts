@@ -174,12 +174,21 @@ public singleDropdownSettings;
        this.loading = false;
 
      
-      this.types.sort((a,b) => {
+  /*    this.types.sort((a,b) => {
          var typeA = a.description.toUpperCase();
          var typeB = b.description.toUpperCase();
          return (typeA < typeB) ? -1 : (typeA > typeB) ? 1 : 0;
       
-      });
+      }); */
+
+
+      
+  /*   this.types.sort((a,b) => {
+         var typeA = a.contenttype.toUpperCase();
+         var typeB = b.contenttype.toUpperCase();
+         return (typeA < typeB) ? -1 : (typeA > typeB) ? 1 : 0;
+      
+      }); */
      
 
       //call to set the selected value based on xmetal app values

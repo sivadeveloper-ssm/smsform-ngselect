@@ -78,11 +78,16 @@
             bindLabel="description"
             groupBy = "contenttype"
             [(ngModel)]="typeModel" (change)="setRelatedFieldTypeValues()" (clear)="onClearType()">
-       
-          <ng-template ng-optgroup-tmp let-item="item">
-        <!-- <div title="{{item.description}}">{{item.description}}</div> -->
-         {{ item.contenttype || 'Unnamed group'}} 
+            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+              <b>{{ item.contenttype | uppercase }}</b>
             </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+              {{ item.description }}
+            </ng-template>
+      <!--    <ng-template ng-optgroup-tmp let-item="item">
+        <!-- <div title="{{item.description}}">{{item.description}}</div> -->
+     <!--    {{ item.contenttype || 'Unnamed group'}} 
+            </ng-template>-->
           </ng-select> 
         </div>
       </div>
