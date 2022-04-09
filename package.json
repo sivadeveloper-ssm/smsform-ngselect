@@ -24,7 +24,7 @@
     "bootstrap": "^3.3.7",
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "ng-multiselect-dropdown": "^0.2.3",
     "ngx-bootstrap": "^4.1.1",
     "ngx-loading": "^3.0.1",
